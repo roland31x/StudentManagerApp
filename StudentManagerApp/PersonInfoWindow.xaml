@@ -1,0 +1,21 @@
+﻿<Window x:Class="StudentManagerApp.PersonInfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StudentManagerApp"
+        mc:Ignorable="d"
+        Title="PersonInfoWindow" Height="400" Width="400"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Canvas>
+            <Button Height="20" Width="48" Canvas.Left="65" Canvas.Top="32" Click="Button_Click" Content="Edit"></Button>
+            <Label x:Name="IDLabel" Height="42" Width="128" Canvas.Left="205" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="22" Canvas.Top="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <StackPanel x:Name="InfoPanel" Height="294" Canvas.Left="10" Canvas.Top="80" Width="380" HorizontalAlignment="Center" VerticalAlignment="Top">
+            </StackPanel>
+            <Image Height="63" Canvas.Left="137" Source="/Images/StudentDefault.jpg" Stretch="Fill" Canvas.Top="12" Width="63"/>
+            <Label x:Name="FunctionLabel" Height="28" Width="128" Canvas.Left="205" Canvas.Top="52" HorizontalAlignment="Center" VerticalAlignment="Top" Content="TEST" HorizontalContentAlignment="Center"/>
+        </Canvas>
+    </Grid>
+</Window>
