@@ -31,11 +31,7 @@ namespace StudentManagerApp
 
         void LoadUp()
         {
-            for (int i = 50; i < 70; i++)
-            {
-                Professor pf = new Professor(i.ToString() + " Prof", i);
-            }
-            for (int i = 0; i < 50; i++)
+            for (int i = 1; i <= 10; i++)
             {
                 Student st = new Student(i.ToString()+" Student", i);               
             }
@@ -43,6 +39,59 @@ namespace StudentManagerApp
         void ListStudents()
         {
             Person.MinimalListItems<Student>(MainList);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            int nextID = 0;
+            for (int i = 1; i < Person.FullPersonList.Keys.Max(); i++)
+            {
+                bool found = true; ;
+                foreach (int key in Person.FullPersonList.Keys)
+                {
+                    if (i == key)
+                    {
+                        found = false;
+                    }
+                }
+                if (found)
+                {
+                    nextID = i;
+                    break;
+                }
+            }
+            if (nextID == 0)
+            {
+                nextID = Person.FullPersonList.Keys.Max() + 1;
+            }
+            Student ToAdd = new Student("Edit-This And-This", nextID);
+            PersonInfoWindow pif = new PersonInfoWindow(ToAdd);
+            pif.ShowDialog();
+            if (MessageBox.Show($"Student {ToAdd.Name} created, press OK to save it.","Save?",MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                ToAdd.MinimalListThis(MainList);
+            }
+            else
+            {
+                ToAdd.Destroy();
+            }
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            MainList.Children.Clear();
+            TextBox context = sender as TextBox;
+            if (context.Text == string.Empty) 
+            {
+                ListStudents();
+            }
+            else
+            {
+                foreach (Student st in Person.FullPersonList.Values.OfType<Student>().Where(x => x.Name.Contains(context.Text)))
+                {
+                    st.MinimalListThis(MainList);
+                }
+            }
         }
     }
 }

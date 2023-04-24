@@ -26,6 +26,7 @@ namespace StudentManagerApp
         public PersonInfoWindow(Person person)
         {
             InitializeComponent();
+            Closed += PersonInfoWindow_Closed;
             CurrentPerson = person;
             DrawDefaultPerson();
             if(CurrentPerson is Student)
@@ -37,6 +38,12 @@ namespace StudentManagerApp
                 //DrawProfessorInfo();
             }
         }
+
+        private void PersonInfoWindow_Closed(object? sender, EventArgs e)
+        {
+            CurrentPerson.Validate();
+        }
+
         public void DrawStudentInfo()
         {
             Student CurrentPerson = (Student)this.CurrentPerson;
@@ -83,7 +90,8 @@ namespace StudentManagerApp
 
         private void CoursesListAll(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            PersonCourseWindow pcw = new PersonCourseWindow(this.CurrentPerson);
+            pcw.ShowDialog();
         }
 
         public void DrawDefaultPerson()

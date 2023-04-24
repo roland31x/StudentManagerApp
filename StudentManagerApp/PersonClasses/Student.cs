@@ -12,24 +12,88 @@ namespace StudentManagerApp.PersonClasses
 {
     public sealed class Student : Person
     {
-        public StackPanel StudentPanel { get; private set; }
         public override string Function { get; protected set; }
         //public int Year { get; set; }
 
         public List<Course> Courses = new List<Course>();
         public Student(string name, int id) : base(id, name)
         {
-
             Function = "Student";
+            Validate();         
+        }
 
-            Validate();
+        private void StudentPanel_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            PersonInfoWindow pif = new PersonInfoWindow(this);
+            pif.ShowDialog();
+        }
 
+        private void StudentPanel_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            (sender as StackPanel).Background = null;
+        }
+
+        private void StudentPanel_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            (sender as StackPanel).Background = Brushes.LightPink;
+        }
+        protected override bool InitialValidate()
+        {
+            bool isinitialvalid = true;
+            if (Courses.Count == 0)
+            {
+                isinitialvalid = false;
+            }
+
+            initialValid = isinitialvalid;
+            OnPropertyChanged("ValidColor");
+            return isinitialvalid;
+        }
+
+        protected override bool TryValidate()
+        {
+            bool fullyValid = true;
+            if (!base.TryValidate()) // need to use base validation first, then add special ones for each class                     
+            {
+                fullyValid = false;
+            }
+
+            if (!InitialValidate())
+            {
+                fullyValid =  false;
+            }
+
+            //if (Year == 0)
+            //{
+            //    Valid = false;
+            //}          
+
+            return fullyValid;
+        }
+        public override void Validate()
+        {
+            if (TryValidate())
+            {
+                fullyValid = true;
+                OnPropertyChanged("ValidColor");
+            }
+            else
+            {
+                fullyValid = false;
+                OnPropertyChanged("ValidColor");
+            }
+        }
+        public override void MinimalListThis(StackPanel list)
+        {
             Label ValidatedLabel = new Label()
             {
                 Style = (Style)Application.Current.Resources["LabelStyle"],
                 Width = 30,
             };
-            BindToControlElement(ValidatedLabel, this, "WasFullyValidated");
+
+            Binding mybind1 = new Binding("ValidColor");
+            mybind1.Source = this;
+            BindingOperations.SetBinding(ValidatedLabel, Control.BackgroundProperty, mybind1);
 
 
             Label NameLabel = new Label()
@@ -54,7 +118,7 @@ namespace StudentManagerApp.PersonClasses
             };
             BindToControlElement(EmailLabel, this, "Email");
 
-            StudentPanel = new StackPanel()
+            StackPanel StudentPanel = new StackPanel()
             {
                 Orientation = Orientation.Horizontal,
                 Children = { ValidatedLabel, NameLabel, IDLabel, EmailLabel }
@@ -63,57 +127,7 @@ namespace StudentManagerApp.PersonClasses
             StudentPanel.MouseEnter += StudentPanel_MouseEnter;
             StudentPanel.MouseLeave += StudentPanel_MouseLeave;
             StudentPanel.MouseDown += StudentPanel_MouseDown;
-        }
 
-        private void StudentPanel_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            PersonInfoWindow pif = new PersonInfoWindow(this);
-            pif.ShowDialog();
-        }
-
-        private void StudentPanel_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            StudentPanel.Background = null;
-        }
-
-        private void StudentPanel_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            StudentPanel.Background = Brushes.LightPink;
-        }
-
-        protected override bool TryValidate()
-        {
-            if (!base.TryValidate()) // need to use base validation first, then add special ones for each class                     
-            {
-                return false;
-            }
-
-            bool Valid = true;
-
-            //if (Year == 0)
-            //{
-            //    Valid = false;
-            //}
-            if(Courses.Count == 0)
-            {
-                Valid = false;
-            }
-
-            return Valid;
-        }
-        public override void Validate()
-        {
-            if (TryValidate())
-            {
-                WasFullyValidated = string.Empty;
-            }
-            else
-            {
-                WasFullyValidated = "!";
-            }
-        }
-        public override void MinimalListThis(StackPanel list)
-        {
             list.Children.Add(StudentPanel);
         }
         public override string ToString()

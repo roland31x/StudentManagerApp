@@ -10,7 +10,7 @@
       Title="StudentPage">
     <Grid>
         <Canvas>
-            <Button Canvas.Left="301" Canvas.Top="1" HorizontalAlignment="Center" VerticalAlignment="Top">Add New Student</Button>
+            <Button Canvas.Left="542" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click" Height="21" Width="142">Add New Student</Button>
             <StackPanel HorizontalAlignment="Center" Height="474" VerticalAlignment="Top" Canvas.Top="26">
                 <StackPanel Orientation="Horizontal" Style="{StaticResource StackPanelStyle}">
                     <Label x:Name="Header0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="30" Height="30" Content="" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
@@ -22,6 +22,8 @@
                     <StackPanel x:Name="MainList" Height="441" Width="700" Style="{StaticResource StackPanelStyle}"/>
                 </ScrollViewer>
             </StackPanel>
+            <Label Content="Search for student:" Canvas.Left="10"/>
+            <TextBox Canvas.Left="120" TextWrapping="Wrap" Canvas.Top="4" Width="143" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TextBox_TextChanged"/>
         </Canvas>
     </Grid>
 </Page>

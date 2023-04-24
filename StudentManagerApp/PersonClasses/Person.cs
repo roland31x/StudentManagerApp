@@ -16,6 +16,7 @@ namespace StudentManagerApp.PersonClasses
 {
     public interface IPerson
     {
+        public void Destroy();
         public void Validate();
         public void MinimalListThis(StackPanel list);
 
@@ -34,7 +35,28 @@ namespace StudentManagerApp.PersonClasses
         public string? PersonalEmail { get; protected set; }
         public string? Phone { get; protected set; }
         public abstract string Function { get; protected set; }
-        public string WasFullyValidated { get; protected set; }
+
+        protected bool initialValid { get; set; }
+        protected bool fullyValid { get; set; }
+        public Brush ValidColor { 
+            get 
+            {
+                if (initialValid && fullyValid)
+                {
+                    return Brushes.Transparent;
+                }
+                else if (initialValid)
+                {
+                    return Brushes.Yellow;
+                }
+                else return Brushes.Red;
+            }
+            set
+            {
+                _ = value;
+                OnPropertyChanged();
+            }
+        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -56,7 +78,8 @@ namespace StudentManagerApp.PersonClasses
 
             FullName = new string[] { name.Replace(temp.Last(), "").TrimEnd().TrimStart(), temp.Last() };
             Id = ID;
-            WasFullyValidated = "!";
+            initialValid = false;
+            fullyValid = false;
         }
         public void SetPersonalEmail(string email)
         {
@@ -111,8 +134,13 @@ namespace StudentManagerApp.PersonClasses
 
             return Valid;
         }
+        public void Destroy()
+        {
+            FullPersonList.Remove(this.Id);
+        }
         public abstract void MinimalListThis(StackPanel list);
         public abstract void Validate();
+        protected abstract bool InitialValidate();
         public static void BindToControlElement(Control control, Person source, string PropertyName)
         {
             Binding myBind = new Binding(PropertyName);
