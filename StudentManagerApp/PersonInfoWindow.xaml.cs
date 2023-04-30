@@ -236,7 +236,7 @@ namespace StudentManagerApp
             StackPanel PhonePanel = new StackPanel() { Orientation = Orientation.Horizontal, Children = { phonelabel, phonetb } };
 
             InfoPanel.Children.Add(PhonePanel);
-            foreach(StackPanel sp in InfoPanel.Children)
+            foreach(StackPanel sp in InfoPanel.Children.OfType<StackPanel>())
             {
                 foreach(TextBox tb in sp.Children.OfType<TextBox>())
                 {

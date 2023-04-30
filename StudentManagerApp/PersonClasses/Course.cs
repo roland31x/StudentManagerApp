@@ -1,51 +1,152 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Media;
+using System.Xml;
 
 namespace StudentManagerApp.PersonClasses
 {   
     public interface ICourse
     {
         public void Validate();
-
-        public void ListCourseForStudent(StackPanel panel, Student student);
-        public void ListCourseForProf(StackPanel panel, Professor prof);
-        public void ListCourse(StackPanel panel);
+        public void Destroy();
+        public StackPanel ListCourseForStudent(StackPanel panel, Student student);
+        public StackPanel ListCourseForProf(StackPanel panel, Professor prof);
+        public StackPanel ListCourse(StackPanel panel);
     }
-    public class Course : ICourse
+    public class Course : ICourse, INotifyPropertyChanged
     {
         protected static Dictionary<int, Course> Courses = new Dictionary<int, Course>();
-        public string CourseName { get; private set; }
+        string _Name;
+        public string CourseName { get { return _Name; } set { _Name = value; OnPropertyChanged(); } }
         public int ID { get; private set; }
+        public bool FullyValid { get; set; }
         public string TrueID { get { return ID.ToString("D7"); } }
-        public Professor? LeadProfessor { get; private set; }
+        public int ProfCount { get { return Professors.Count; } }
         public List<Professor> Professors { get; private set; }
+        public int StudentCount { get { return StudentList.Values.Count; } }
         public Dictionary<Student,Grade> StudentList { get; private set; }
+        public Brush ValidColor
+        {
+            get
+            {
+                if (FullyValid)
+                {
+                    return Brushes.Transparent;
+                }
+                else return Brushes.Red;
+            }
+        }
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = "")
+        {
+            PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(name));
+        }
         public Course(string Name, int ID) 
         {
             Courses.Add(ID, this);
-            CourseName = Name;
+            _Name = Name;
             this.ID = ID;
             Professors = new List<Professor>();
             StudentList = new Dictionary<Student, Grade>();
+            FullyValid = false;
         }
+        public void Destroy()
+        {
+            while(StudentList.Keys.Count > 0)
+            {
+                RemoveStudent(StudentList.Keys.First());
+            }
+            foreach(Professor pf in Professors)
+            {
+                UnassignProf(pf);
+            }
+            Courses.Remove(ID);
 
+        }
         public void Validate()
         {
-            throw new NotImplementedException();
+            if(ProfCount > 0 && StudentCount > 0)
+            {
+                FullyValid = true;
+            }
+            else
+            {
+                FullyValid = false;
+            }
+            OnPropertyChanged("ValidColor");
         }
-
-        public void ListCourse(StackPanel panel)
+        public static List<StackPanel> ListAllCourses(StackPanel panel)
         {
-            
+            List<StackPanel> ToReturn = new List<StackPanel>();
+            foreach(Course cs in Courses.Values)
+            {
+                ToReturn.Add(cs.ListCourse(panel));
+            }
+            return ToReturn;
+        }
+        public StackPanel ListCourse(StackPanel panel)
+        {
+            Label ValidatedLabel = new Label()
+            {
+                Style = (Style)Application.Current.Resources["LabelStyle"],
+                Width = 30,
+            };
+            BindToControlElement(ValidatedLabel, Control.BackgroundProperty, this, "ValidColor");
+
+
+            Label NameLabel = new Label()
+            {
+                Style = (Style)Application.Current.Resources["LabelStyle"],
+                Width = 250,
+            };
+            BindToControlElement(NameLabel, ContentControl.ContentProperty, this, "CourseName");
+
+            Label IDLabel = new Label()
+            {
+                Style = (Style)Application.Current.Resources["LabelStyle"],
+                Width = 70,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+            };
+            BindToControlElement(IDLabel, ContentControl.ContentProperty, this, "TrueID");
+
+            Label STLabel = new Label()
+            {
+                Style = (Style)Application.Current.Resources["LabelStyle"],
+                Width = 150,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+            };
+            BindToControlElement(STLabel, ContentControl.ContentProperty, this, "StudentCount");
+
+            Label PFLabel = new Label()
+            {
+                Style = (Style)Application.Current.Resources["LabelStyle"],
+                Width = 200,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+            };
+            BindToControlElement(PFLabel, ContentControl.ContentProperty, this, "ProfCount");
+
+            StackPanel CoursePanel = new StackPanel()
+            {
+                Orientation = Orientation.Horizontal,
+                Children = { ValidatedLabel, NameLabel, IDLabel, STLabel, PFLabel },
+                Tag = this,
+            };
+            panel.Children.Add(CoursePanel);
+
+            return CoursePanel;
         }
 
-        public void ListCourseForStudent(StackPanel panel, Student st)
+        public StackPanel ListCourseForStudent(StackPanel panel, Student st)
         {
             Label IDLabel = new Label()
             {
@@ -92,25 +193,78 @@ namespace StudentManagerApp.PersonClasses
             StackPanel stCoursePanel = new StackPanel()
             {
                 Orientation = Orientation.Horizontal,
-                Children = { IDLabel, NameLabel, GrLabel, AVGLabel }
+                Children = { IDLabel, NameLabel, GrLabel, AVGLabel },
+                Tag = this,
             };
             panel.Children.Add(stCoursePanel);
+
+            return stCoursePanel;
         }
         public void AddStudent(Student t)
         {
             StudentList.Add(t, new Grade());
-            t.Courses.Add(this);
+            t.Enlist(this);
+            OnPropertyChanged("StudentCount");
+            Validate();
         }
-        public void ListCourseForProf(StackPanel panel, Professor pf)
+        public void RemoveStudent(Student t)
         {
-           
+            StudentList.Remove(t);
+            t.Delist(this);
+            OnPropertyChanged("StudentCount");
+            Validate();
+        }
+        public void AssignPorf(Professor pf)
+        {
+            Professors.Add(pf);
+            pf.Courses.Add(this);
+            OnPropertyChanged("ProfCount");
+            Validate();
+        }
+        public void UnassignProf(Professor pf)
+        {
+            Professors.Remove(pf);
+            pf.Courses.Remove(this);
+            OnPropertyChanged("ProfCount");
+            Validate();
+        }
+        public StackPanel ListCourseForProf(StackPanel panel, Professor pf)
+        {
+            return new StackPanel();
+        }
+        public static void BindToControlElement(Control control, DependencyProperty dp, Course source, string PropertyName)
+        {
+            Binding myBind = new Binding(PropertyName);
+            myBind.Source = source;
+            myBind.Mode = BindingMode.OneWay;
+            BindingOperations.SetBinding(control, dp, myBind);
         }
     }
     public class Grade
     {
         public List<int> Grades { get; private set; }
-        public string StringValue { get { return ToString(); } }
-        public double AVGGrade { get { return AverageGrade(); } }
+        public string StringValue 
+        { 
+            get 
+            {
+                if(Grades.Count == 0)
+                {
+                    return "Not graded";
+                }
+                return ToString();
+            } 
+        }
+        public double AVGGrade 
+        { 
+            get 
+            {
+                if(Grades.Count == 0)
+                {
+                    return 0;
+                }
+                return AverageGrade(); 
+            } 
+        }
         public Grade()
         {
             Grades = new List<int>();

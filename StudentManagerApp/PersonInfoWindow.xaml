@@ -10,7 +10,7 @@
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Canvas>
-            <Button Height="20" Width="48" Canvas.Left="65" Canvas.Top="32" Click="Button_Click" Content="Edit"></Button>
+            <Button Height="20" Width="90" Canvas.Left="23" Canvas.Top="34" Click="Button_Click" Content="Edit" HorizontalAlignment="Center" VerticalAlignment="Top"></Button>
             <Label x:Name="IDLabel" Height="42" Width="128" Canvas.Left="205" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="22" Canvas.Top="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
             <StackPanel x:Name="InfoPanel" Height="294" Canvas.Left="10" Canvas.Top="80" Width="380" HorizontalAlignment="Center" VerticalAlignment="Top">
             </StackPanel>

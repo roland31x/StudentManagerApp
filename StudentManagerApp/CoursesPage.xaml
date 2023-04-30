@@ -1,28 +1,29 @@
-﻿<Page x:Class="StudentManagerApp.StudentPage"
+﻿<Page x:Class="StudentManagerApp.CoursesPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:StudentManagerApp"
       mc:Ignorable="d" 
-      d:DesignHeight="500" d:DesignWidth="700"
-      Background="White"
-      Title="StudentPage">
+      d:DesignHeight="500" d:DesignWidth="700" Background="White"
+      Title="CoursesPage">
+
     <Grid>
         <Canvas x:Name="MainCanvas">
-            <Button Canvas.Left="542" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click" Height="21" Width="142">Add New Student</Button>
+            <Button Canvas.Left="542" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click" Height="21" Width="142">Add New Course</Button>
             <StackPanel HorizontalAlignment="Center" Height="474" VerticalAlignment="Top" Canvas.Top="26">
                 <StackPanel Orientation="Horizontal" Style="{StaticResource StackPanelStyle}">
                     <Label x:Name="Header0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="30" Height="30" Content="" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
                     <Label x:Name="Header1" HorizontalAlignment="Center" VerticalAlignment="Top" Width="250" Height="30" Content="Name" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
                     <Label x:Name="Header2" HorizontalAlignment="Center" VerticalAlignment="Top" Width="70" Height="30" Content="ID" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
-                    <Label x:Name="Header3" HorizontalAlignment="Center" VerticalAlignment="Top" Width="350" Height="30" Content="Email" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+                    <Label x:Name="Header3" VerticalAlignment="Top" Width="150" Height="30" Content="Enlisted Students" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <Label x:Name="Header4" VerticalAlignment="Top" Width="200" Height="30" Content="Professors" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 </StackPanel>
                 <ScrollViewer Width="700" CanContentScroll="True">
                     <StackPanel x:Name="MainList" Height="441" Width="700" Style="{StaticResource StackPanelStyle}"/>
                 </ScrollViewer>
             </StackPanel>
-            <Label Content="Search for student:" Canvas.Left="10"/>
+            <Label Content="Search for course:" Canvas.Left="10"/>
             <TextBox Canvas.Left="120" TextWrapping="Wrap" Canvas.Top="4" Width="143" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TextBox_TextChanged"/>
         </Canvas>
     </Grid>

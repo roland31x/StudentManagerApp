@@ -14,28 +14,32 @@ namespace StudentManagerApp.PersonClasses
     {
         public override string Function { get; protected set; }
         //public int Year { get; set; }
-
-        public List<Course> Courses = new List<Course>();
+        public List<Course> Courses { get; set; }
         public Student(string name, int id) : base(id, name)
         {
             Function = "Student";
+            Courses = new List<Course>();
             Validate();         
         }
 
-        private void StudentPanel_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+       
+        public override void Destroy()
         {
-            PersonInfoWindow pif = new PersonInfoWindow(this);
-            pif.ShowDialog();
+            base.Destroy();
+            while(Courses.Count > 0)
+            {
+                Courses[0].RemoveStudent(this);
+            }
         }
-
-        private void StudentPanel_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        public void Enlist(Course cs)
         {
-            (sender as StackPanel).Background = null;
+            Courses.Add(cs);
+            Validate();
         }
-
-        private void StudentPanel_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        public void Delist(Course cs)
         {
-            (sender as StackPanel).Background = Brushes.LightPink;
+            Courses.Remove(cs);
+            Validate();
         }
         protected override bool InitialValidate()
         {
@@ -83,17 +87,14 @@ namespace StudentManagerApp.PersonClasses
                 OnPropertyChanged("ValidColor");
             }
         }
-        public override void MinimalListThis(StackPanel list)
+        public override StackPanel MinimalListThis(StackPanel list)
         {
             Label ValidatedLabel = new Label()
             {
                 Style = (Style)Application.Current.Resources["LabelStyle"],
                 Width = 30,
             };
-
-            Binding mybind1 = new Binding("ValidColor");
-            mybind1.Source = this;
-            BindingOperations.SetBinding(ValidatedLabel, Control.BackgroundProperty, mybind1);
+            BindToControlElement(ValidatedLabel, Control.BackgroundProperty, this, "ValidColor");
 
 
             Label NameLabel = new Label()
@@ -101,7 +102,7 @@ namespace StudentManagerApp.PersonClasses
                 Style = (Style)Application.Current.Resources["LabelStyle"],
                 Width = 250,
             };
-            BindToControlElement(NameLabel, this, "Name");
+            BindToControlElement(NameLabel, ContentControl.ContentProperty, this, "Name");
 
             Label IDLabel = new Label()
             {
@@ -109,26 +110,25 @@ namespace StudentManagerApp.PersonClasses
                 Width = 70,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
             };
-            BindToControlElement(IDLabel, this, "TrueID");
+            BindToControlElement(IDLabel, ContentControl.ContentProperty, this, "TrueID");
 
             Label EmailLabel = new Label()
             {
                 Style = (Style)Application.Current.Resources["LabelStyle"],
                 Width = 350,
             };
-            BindToControlElement(EmailLabel, this, "Email");
+            BindToControlElement(EmailLabel, ContentControl.ContentProperty, this, "Email");
 
             StackPanel StudentPanel = new StackPanel()
             {
                 Orientation = Orientation.Horizontal,
-                Children = { ValidatedLabel, NameLabel, IDLabel, EmailLabel }
+                Children = { ValidatedLabel, NameLabel, IDLabel, EmailLabel },
+                Tag = this,
             };
 
-            StudentPanel.MouseEnter += StudentPanel_MouseEnter;
-            StudentPanel.MouseLeave += StudentPanel_MouseLeave;
-            StudentPanel.MouseDown += StudentPanel_MouseDown;
-
             list.Children.Add(StudentPanel);
+
+            return StudentPanel;
         }
         public override string ToString()
         {

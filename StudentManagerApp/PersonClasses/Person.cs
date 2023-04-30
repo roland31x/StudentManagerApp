@@ -18,7 +18,7 @@ namespace StudentManagerApp.PersonClasses
     {
         public void Destroy();
         public void Validate();
-        public void MinimalListThis(StackPanel list);
+        public StackPanel MinimalListThis(StackPanel list);
 
     }
     abstract public class Person : IPerson, INotifyPropertyChanged
@@ -63,13 +63,6 @@ namespace StudentManagerApp.PersonClasses
         protected void OnPropertyChanged([CallerMemberName] string name = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-        public static void MinimalListItems<IPerson>(StackPanel panel)
-        {
-            foreach (Person type in FullPersonList.Values.Where(x => x is IPerson))
-            {
-                type.MinimalListThis(panel);
-            }
         }
         protected Person(int ID, string name)
         {
@@ -134,18 +127,18 @@ namespace StudentManagerApp.PersonClasses
 
             return Valid;
         }
-        public void Destroy()
+        public virtual void Destroy()
         {
             FullPersonList.Remove(this.Id);
         }
-        public abstract void MinimalListThis(StackPanel list);
+        public abstract StackPanel MinimalListThis(StackPanel list);
         public abstract void Validate();
         protected abstract bool InitialValidate();
-        public static void BindToControlElement(Control control, Person source, string PropertyName)
+        public static void BindToControlElement(Control control, DependencyProperty dp, Person source, string PropertyName)
         {
             Binding myBind = new Binding(PropertyName);
             myBind.Source = source;
-            BindingOperations.SetBinding(control, ContentControl.ContentProperty, myBind);
+            BindingOperations.SetBinding(control, dp, myBind);
         }
     }
    

@@ -26,7 +26,45 @@ namespace StudentManagerApp
         public MainWindow()
         {
             InitializeComponent();
+            LoadUp();
+            MainFrame.Navigated += MainFrame_Navigated;
+        }
+        void LoadUp()
+        {
+            for(int i = 0; i < 100; i++)
+            {
+                Student st = new Student($"{i} Student", i);
+            }
+            for(int i = 0; i < 10; i++)
+            {
+                Course cs = new Course($"Course{i}", i);
+            }
+        }
+        private void MainFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            MainFrame.NavigationService.RemoveBackEntry();
+        }
+
+        private void ShowStudentsPage(object sender, RoutedEventArgs e)
+        {
             MainFrame.Navigate(new StudentPage());
+            App.CurrentPage = MainFrame.Content as StudentPage;
+        }
+
+        private void ShowCoursesPage(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new CoursesPage());
+            App.CurrentPage = MainFrame.Content as CoursesPage;
+        }
+
+        private void ShowProfessorsPage(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ShowPersonnelPage(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -5,10 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StudentManagerApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="640" Width="800">
+        Title="MainWindow" Height="640" Width="1000"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Canvas x:Name="MainCanvas">
-        <Frame x:Name="MainFrame" Height="500" Canvas.Left="50" Canvas.Top="70" Width="700">
+        <TabControl />
+        <Frame x:Name="MainFrame" Height="500" Canvas.Left="250" Canvas.Top="70" Width="700" NavigationUIVisibility="Hidden">
 
         </Frame>
+        <Button Content="Students" Canvas.Left="65" Canvas.Top="70" Height="55" Width="108" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ShowStudentsPage"/>
+        <Button Content="Courses" Canvas.Left="65" Canvas.Top="161" Height="55" Width="108" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ShowCoursesPage"/>
+        <Button Content="Professors" Canvas.Left="65" Canvas.Top="256" Height="55" Width="108" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ShowProfessorsPage"/>
+        <Button Content="Personnel" Canvas.Left="65" Canvas.Top="343" Height="55" Width="108" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ShowPersonnelPage"/>
+        <TextBlock Canvas.Left="360" TextWrapping="Wrap" Text="Student Management App" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="24"/>
     </Canvas>
 </Window>

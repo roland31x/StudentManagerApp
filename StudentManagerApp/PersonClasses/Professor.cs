@@ -83,23 +83,21 @@ namespace StudentManagerApp.PersonClasses
                 OnPropertyChanged("ValidColor");
             }
         }
-        public override void MinimalListThis(StackPanel list)
+        public override StackPanel MinimalListThis(StackPanel list)
         {
             Label ValidatedLabel = new Label()
             {
                 Style = (Style)Application.Current.Resources["LabelStyle"],
                 Width = 30,
             };
-            Binding mybind1 = new Binding("ValidColor");
-            mybind1.Source = this;
-            BindingOperations.SetBinding(ValidatedLabel, Control.BackgroundProperty, mybind1);
+            BindToControlElement(ValidatedLabel, Control.BackgroundProperty, this, "ValidColor");
 
             Label NameLabel = new Label()
             {
                 Style = (Style)Application.Current.Resources["LabelStyle"],
                 Width = 250,
             };
-            BindToControlElement(NameLabel, this, "Name");
+            BindToControlElement(NameLabel, ContentControl.ContentProperty, this, "Name");
 
             Label IDLabel = new Label()
             {
@@ -107,14 +105,14 @@ namespace StudentManagerApp.PersonClasses
                 Width = 70,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
             };
-            BindToControlElement(IDLabel, this, "TrueID");
+            BindToControlElement(IDLabel, ContentControl.ContentProperty, this, "TrueID");
 
             Label EmailLabel = new Label()
             {
                 Style = (Style)Application.Current.Resources["LabelStyle"],
                 Width = 350,
             };
-            BindToControlElement(EmailLabel, this, "Email");
+            BindToControlElement(EmailLabel, ContentControl.ContentProperty, this, "Email");
 
             StackPanel ProfPanel = new StackPanel()
             {
@@ -126,6 +124,7 @@ namespace StudentManagerApp.PersonClasses
             ProfPanel.MouseLeave += ProfPanel_MouseLeave;
             ProfPanel.MouseDown += ProfPanel_MouseDown;
             list.Children.Add(ProfPanel);
+            return ProfPanel;
         }
 
     }
