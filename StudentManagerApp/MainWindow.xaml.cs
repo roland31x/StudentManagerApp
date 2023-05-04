@@ -35,7 +35,11 @@ namespace StudentManagerApp
             {
                 Student st = new Student($"{i} Student", i);
             }
-            for(int i = 0; i < 10; i++)
+            for (int i = 100; i < 110; i++)
+            {
+                Professor st = new Professor($"{i} Prof", i);
+            }
+            for (int i = 0; i < 10; i++)
             {
                 Course cs = new Course($"Course{i}", i);
             }
@@ -59,12 +63,13 @@ namespace StudentManagerApp
 
         private void ShowProfessorsPage(object sender, RoutedEventArgs e)
         {
-
+            MainFrame.Navigate(new ProfessorPage());
+            App.CurrentPage = MainFrame.Content as ProfessorPage;
         }
 
         private void ShowPersonnelPage(object sender, RoutedEventArgs e)
         {
-
+            
         }
     }
 }

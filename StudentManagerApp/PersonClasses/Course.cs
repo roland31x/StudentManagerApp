@@ -66,9 +66,9 @@ namespace StudentManagerApp.PersonClasses
             {
                 RemoveStudent(StudentList.Keys.First());
             }
-            foreach(Professor pf in Professors)
+            while(Professors.Count > 0)
             {
-                UnassignProf(pf);
+                UnassignProf(Professors.First());
             }
             Courses.Remove(ID);
 
@@ -214,7 +214,7 @@ namespace StudentManagerApp.PersonClasses
             OnPropertyChanged("StudentCount");
             Validate();
         }
-        public void AssignPorf(Professor pf)
+        public void AssignProf(Professor pf)
         {
             Professors.Add(pf);
             pf.Courses.Add(this);

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StudentManagerApp"
         mc:Ignorable="d"
-        Title="CourseInfoWindow" Height="600" Width="810"
+        Title="CourseInfoWindow" Height="620" Width="810"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">
     <Grid>

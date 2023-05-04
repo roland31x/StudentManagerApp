@@ -16,17 +16,17 @@ using System.Windows.Shapes;
 namespace StudentManagerApp
 {
     /// <summary>
-    /// Interaction logic for StudentEnrollmentWindow.xaml
+    /// Interaction logic for ProfessorEnrollmentWindow.xaml
     /// </summary>
-    public partial class StudentEnrollmentWindow : Window
+    public partial class ProfessorEnrollmentWindow : Window
     {
-        StudentPage created;
+        ProfessorPage created;
         Course Current { get; set; }
-        public StudentEnrollmentWindow(Course cs)
+        public ProfessorEnrollmentWindow(Course cs)
         {
             InitializeComponent();
             Current = cs;
-            created = new StudentPage(cs);
+            created = new ProfessorPage(cs);
             MainFrame.Navigate(created);
             Closed += StudentEnrollmentWindow_Closed;
         }
@@ -35,9 +35,8 @@ namespace StudentManagerApp
         {
             foreach (StackPanel student in created.MainList.Children.OfType<StackPanel>().Where(x => x.Background == Brushes.Violet))
             {
-                Current.AddStudent(student.Tag as Student);
+                Current.AssignProf(student.Tag as Professor);
             }
         }
-
     }
 }

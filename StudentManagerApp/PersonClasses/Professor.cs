@@ -117,12 +117,9 @@ namespace StudentManagerApp.PersonClasses
             StackPanel ProfPanel = new StackPanel()
             {
                 Orientation = Orientation.Horizontal,
-                Children = { ValidatedLabel, NameLabel, IDLabel, EmailLabel }
+                Children = { ValidatedLabel, NameLabel, IDLabel, EmailLabel },
+                Tag = this,
             };
-
-            ProfPanel.MouseEnter += ProfPanel_MouseEnter;
-            ProfPanel.MouseLeave += ProfPanel_MouseLeave;
-            ProfPanel.MouseDown += ProfPanel_MouseDown;
             list.Children.Add(ProfPanel);
             return ProfPanel;
         }

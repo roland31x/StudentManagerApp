@@ -21,7 +21,6 @@ namespace StudentManagerApp.PersonClasses
             Courses = new List<Course>();
             Validate();         
         }
-
        
         public override void Destroy()
         {

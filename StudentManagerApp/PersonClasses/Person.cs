@@ -28,10 +28,10 @@ namespace StudentManagerApp.PersonClasses
         public int Id { get; protected set; }
         public string TrueID { get { return Id.ToString("D7"); } }
         public string? Email { get; protected set; }
-        public string FirstName { get { return FullName.First(); } set { FullName[0] = value; Name = string.Empty; } }
+        public string FirstName { get { return FullName.First(); } set { FullName[0] = value; OnPropertyChanged("Name"); } }
         public DateTime? DateOfBrith { get; protected set; }
-        public string LastName { get { return FullName.Last(); } set { FullName[1] = value; Name = string.Empty; } }
-        public string Name { get { return FirstName + " " + LastName; } set { _ = value; OnPropertyChanged(); } }
+        public string LastName { get { return FullName.Last(); } set { FullName[1] = value; OnPropertyChanged("Name"); } }
+        public string Name { get { return FirstName + " " + LastName; } }
         public string? PersonalEmail { get; protected set; }
         public string? Phone { get; protected set; }
         public abstract string Function { get; protected set; }

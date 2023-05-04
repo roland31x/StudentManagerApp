@@ -42,15 +42,13 @@ namespace StudentManagerApp
             UpdateStudentTable();
             // Profs box
 
-            foreach(Professor pf in CurrentCourse.Professors)
-            {
-                pf.MinimalListThis(PFInfoPanel);
-            }
+            UpdateProfsTable();
 
         }
         StackPanel AddStudentPanel(Student st, Grade gr)
         {
             Label stname = new Label() { Width = 280, Style = (Style)App.Current.Resources["LabelStyle"], HorizontalContentAlignment = HorizontalAlignment.Center };
+            
             Person.BindToControlElement(stname, ContentControl.ContentProperty, st, "Name");
             Label grs = new Label() { Width = 370, Style = (Style)App.Current.Resources["LabelStyle"], HorizontalContentAlignment = HorizontalAlignment.Center } ;
 
@@ -113,13 +111,22 @@ namespace StudentManagerApp
 
         private void AssignProfClick(object sender, RoutedEventArgs e)
         {
-
+            new ProfessorEnrollmentWindow(CurrentCourse).ShowDialog();
+            UpdateProfsTable();
         }
 
         private void AddStudentClick(object sender, RoutedEventArgs e)
         {
             new StudentEnrollmentWindow(CurrentCourse).ShowDialog();
             UpdateStudentTable();
+        }
+        void UpdateProfsTable()
+        {
+            PFInfoPanel.Children.Clear();
+            foreach (Professor pf in CurrentCourse.Professors)
+            {
+                pf.MinimalListThis(PFInfoPanel);
+            }
         }
 
         private void UpdateStudentTable()

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using StudentManagerApp.PersonClasses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Transactions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -13,41 +13,40 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using StudentManagerApp.PersonClasses;
 
 namespace StudentManagerApp
 {
     /// <summary>
-    /// Interaction logic for StudentPage.xaml
+    /// Interaction logic for ProfessorPage.xaml
     /// </summary>
-    public partial class StudentPage : Page
+    public partial class ProfessorPage : Page
     {
         List<StackPanel>? _stp = new List<StackPanel>();
         bool IsEditable = true;
-        List<StackPanel> StudentPanels { get { return _stp; } set { _stp = value; } }
-        public StudentPage()
+        List<StackPanel> ProfPanels { get { return _stp; } set { _stp = value; } }
+        public ProfessorPage()
         {
             InitializeComponent();
-            foreach (Student st in Person.FullPersonList.Values.OfType<Student>())
+            foreach (Professor st in Person.FullPersonList.Values.OfType<Professor>())
             {
-                StudentPanels.Add(st.MinimalListThis(MainList));
+                ProfPanels.Add(st.MinimalListThis(MainList));
             }
             AddControlBoxes();
         }
-        public StudentPage(Course cs)
+        public ProfessorPage(Course cs)
         {
             InitializeComponent();
             IsEditable = false;
-            foreach (Student st in Person.FullPersonList.Values.OfType<Student>().Where(x => (!cs.StudentList.ContainsKey(x))))
+            foreach (Professor st in Person.FullPersonList.Values.OfType<Professor>().Where(x => (!cs.Professors.Contains(x))))
             {
-                StudentPanels.Add(st.MinimalListThis(MainList));
+                ProfPanels.Add(st.MinimalListThis(MainList));
             }
             AddControlBoxes();
         }
 
         void AddControlBoxes()
         {
-            foreach(StackPanel sp in _stp!)
+            foreach (StackPanel sp in _stp!)
             {
                 sp.MouseDown += Sp_MouseDown;
                 sp.MouseEnter += Panel_MouseEnter;
@@ -81,19 +80,19 @@ namespace StudentManagerApp
         }
         private void Sp_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(e.LeftButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
                 if (!IsEditable)
                 {
                     StackPanel hovered = (StackPanel)sender;
-                    if(hovered.Background == Brushes.DeepSkyBlue || hovered.Background == Brushes.Violet)
+                    if (hovered.Background == Brushes.DeepSkyBlue || hovered.Background == Brushes.Violet)
                     {
                         hovered.Background = null;
                     }
                     else
                     {
                         hovered.Background = Brushes.Violet;
-                    }                  
+                    }
                 }
                 return;
             }
@@ -111,9 +110,9 @@ namespace StudentManagerApp
                 BorderThickness = new Thickness(2, 2, 2, 2),
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 Tag = (sender as StackPanel).Tag,
-                
+
             };
-            
+
 
             Label textBlock1 = new Label()
             {
@@ -141,25 +140,25 @@ namespace StudentManagerApp
 
         private void DelBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(MessageBox.Show("You sure you want to delete this student?","Delete?",MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBox.Show("You sure you want to delete this student?", "Delete?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                Student st = ((sender as Label)!.Tag as Student)!;
+                Professor st = ((sender as Label)!.Tag as Professor)!;
                 st.Destroy();
                 MainList.Children.Remove(GetPanel(st));
             }
-            
+
         }
-        StackPanel GetPanel(Student st)
+        StackPanel GetPanel(Professor st)
         {
             StackPanel toReturn = null;
-            foreach(StackPanel sp in StudentPanels)
+            foreach (StackPanel sp in ProfPanels)
             {
-                if(sp.Tag == st)
+                if (sp.Tag == st)
                 {
                     toReturn = sp;
                 }
             }
-            if(toReturn == null)
+            if (toReturn == null)
             {
                 throw new ArgumentNullException(st.ToString());
             }
@@ -167,7 +166,7 @@ namespace StudentManagerApp
         }
         private void TextBlock1_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            new PersonInfoWindow((sender as Label).Tag as Student).ShowDialog();
+            new PersonInfoWindow((sender as Label).Tag as Professor).ShowDialog();
         }
 
         private void InfoBlock_MouseLeave(object sender, MouseEventArgs e)
@@ -175,16 +174,16 @@ namespace StudentManagerApp
             MainCanvas.Children.Remove(sender as StackPanel);
         }
 
-        void ListAllStudents()
+        void ListAllProfs()
         {
-            foreach (StackPanel st in StudentPanels)
+            foreach (StackPanel st in ProfPanels)
             {
                 MainList.Children.Add(st);
             }
         }
         void FilterAfterNameSearch(string filter)
         {
-            foreach (StackPanel st in StudentPanels.Where(x => (x.Tag as Student)!.Name.Contains(filter)))
+            foreach (StackPanel st in ProfPanels.Where(x => (x.Tag as Professor)!.Name.Contains(filter)))
             {
                 MainList.Children.Add(st);
             }
@@ -212,13 +211,16 @@ namespace StudentManagerApp
             {
                 nextID = Person.FullPersonList.Keys.Max() + 1;
             }
-            Student ToAdd = new Student("Edit-This And-This", nextID);
+            Professor ToAdd = new Professor("Edit-This And-This", nextID);
             PersonInfoWindow pif = new PersonInfoWindow(ToAdd);
             pif.ShowDialog();
-            if (MessageBox.Show($"Student {ToAdd.Name} created, press OK to save it.","Save?",MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            if (MessageBox.Show($"Student {ToAdd.Name} created, press OK to save it.", "Save?", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
                 StackPanel added = ToAdd.MinimalListThis(MainList);
-                StudentPanels.Add(added);
+                ProfPanels.Add(added);
+                added.MouseDown += Sp_MouseDown;
+                added.MouseEnter += Panel_MouseEnter;
+                added.MouseLeave += Panel_MouseLeave;
             }
             else
             {
@@ -230,9 +232,9 @@ namespace StudentManagerApp
         {
             MainList.Children.Clear();
             TextBox context = sender as TextBox;
-            if (context.Text == string.Empty) 
+            if (context.Text == string.Empty)
             {
-                ListAllStudents();
+                ListAllProfs();
             }
             else
             {
