@@ -23,7 +23,11 @@
                 <StackPanel x:Name="STInfoPanel"/>
             </ScrollViewer>
             <Label Content="Professors:" Canvas.Left="10" Canvas.Top="417" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-            <ScrollViewer Canvas.Left="15" Canvas.Top="453" Height="123" Width="770" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal" Style="{StaticResource StackPanelStyle}" Canvas.Left="15" Canvas.Top="451" HorizontalAlignment="Left" VerticalAlignment="Top" Width="770">
+                <Label x:Name="PHeader1" VerticalAlignment="Top" Width="280" Height="30" Content="Name" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Label x:Name="PHeader2" VerticalAlignment="Top" Width="490" Height="30" Content="Email" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            </StackPanel>
+            <ScrollViewer Canvas.Left="15" Canvas.Top="481" Height="95" Width="770" HorizontalAlignment="Center" VerticalAlignment="Top">
                 <StackPanel x:Name="PFInfoPanel"/>
             </ScrollViewer>
 

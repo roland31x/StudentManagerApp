@@ -18,5 +18,14 @@
                 </Style>
             </Style.Resources>
         </Style>
+        <Style x:Key="StackPanelStyleStacks" TargetType="StackPanel">
+            <Style.Resources>
+                <Style TargetType="StackPanel">
+                    <Style.Setters>
+                        <Setter Property="Margin" Value="4"></Setter>
+                    </Style.Setters>
+                </Style>
+            </Style.Resources>
+        </Style>
     </Application.Resources>
 </Application>

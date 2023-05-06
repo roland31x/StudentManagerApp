@@ -24,7 +24,7 @@
                 </ScrollViewer>
             </StackPanel>
             <Label Content="Search for professor:" Canvas.Left="10"/>
-            <TextBox Canvas.Left="120" TextWrapping="Wrap" Canvas.Top="4" Width="143" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TextBox_TextChanged"/>
+            <TextBox Canvas.Left="129" TextWrapping="Wrap" Canvas.Top="4" Width="143" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TextBox_TextChanged"/>
         </Canvas>
     </Grid>
 </Page>

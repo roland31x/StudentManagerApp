@@ -217,14 +217,14 @@ namespace StudentManagerApp.PersonClasses
         public void AssignProf(Professor pf)
         {
             Professors.Add(pf);
-            pf.Courses.Add(this);
+            pf.Enlist(this);
             OnPropertyChanged("ProfCount");
             Validate();
         }
         public void UnassignProf(Professor pf)
         {
             Professors.Remove(pf);
-            pf.Courses.Remove(this);
+            pf.Delist(this);
             OnPropertyChanged("ProfCount");
             Validate();
         }
@@ -238,77 +238,6 @@ namespace StudentManagerApp.PersonClasses
             myBind.Source = source;
             myBind.Mode = BindingMode.OneWay;
             BindingOperations.SetBinding(control, dp, myBind);
-        }
-    }
-    public class Grade
-    {
-        public List<int> Grades { get; private set; }
-        public string StringValue 
-        { 
-            get 
-            {
-                if(Grades.Count == 0)
-                {
-                    return "Not graded";
-                }
-                return ToString();
-            } 
-        }
-        public double AVGGrade 
-        { 
-            get 
-            {
-                if(Grades.Count == 0)
-                {
-                    return 0;
-                }
-                return AverageGrade(); 
-            } 
-        }
-        public Grade()
-        {
-            Grades = new List<int>();
-        }
-        public Grade(List<int> grades)
-        {
-            Grades = grades;
-        }
-        public double AverageGrade()
-        {
-            double i = 1;
-            double result = 0;
-            foreach(int gr in Grades)
-            {
-                result += gr;
-                i++;
-            }
-            return Math.Round(result / i, 2);
-        }
-        public void AddGrade(int gr)
-        {
-            Grades.Add(gr);
-        }
-        public void CorrectGrade(int which, int newgr) // warning this is experimental
-        {
-            try
-            {
-                Grades[which] = newgr;
-            }
-            catch(Exception)
-            {
-                MessageBox.Show("grade doesn't exist");
-            }
-        }
-        public override string ToString()
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach(int gr in Grades)
-            {
-                stringBuilder.Append(gr);
-                stringBuilder.Append(' ');                
-            }
-
-            return stringBuilder.ToString();
         }
     }
 }

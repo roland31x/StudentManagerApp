@@ -12,7 +12,7 @@
         <Canvas>
             <Button Height="20" Width="90" Canvas.Left="23" Canvas.Top="34" Click="Button_Click" Content="Edit" HorizontalAlignment="Center" VerticalAlignment="Top"></Button>
             <Label x:Name="IDLabel" Height="42" Width="128" Canvas.Left="205" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="22" Canvas.Top="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-            <StackPanel x:Name="InfoPanel" Height="294" Canvas.Left="10" Canvas.Top="80" Width="380" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <StackPanel x:Name="InfoPanel" Style="{StaticResource StackPanelStyleStacks}" Height="294" Canvas.Left="10" Canvas.Top="80" Width="380" HorizontalAlignment="Center" VerticalAlignment="Top">
             </StackPanel>
             <Image Height="63" Canvas.Left="137" Source="/Images/StudentDefault.jpg" Stretch="Fill" Canvas.Top="12" Width="63"/>
             <Label x:Name="FunctionLabel" Height="28" Width="128" Canvas.Left="205" Canvas.Top="52" HorizontalAlignment="Center" VerticalAlignment="Top" Content="TEST" HorizontalContentAlignment="Center"/>

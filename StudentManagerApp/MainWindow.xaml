@@ -12,10 +12,10 @@
         <Frame x:Name="MainFrame" Height="500" Canvas.Left="250" Canvas.Top="70" Width="700" NavigationUIVisibility="Hidden">
 
         </Frame>
-        <Button Content="Students" Canvas.Left="65" Canvas.Top="70" Height="55" Width="108" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ShowStudentsPage"/>
-        <Button Content="Courses" Canvas.Left="65" Canvas.Top="161" Height="55" Width="108" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ShowCoursesPage"/>
-        <Button Content="Professors" Canvas.Left="65" Canvas.Top="256" Height="55" Width="108" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ShowProfessorsPage"/>
-        <Button Content="Personnel" Canvas.Left="65" Canvas.Top="343" Height="55" Width="108" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ShowPersonnelPage"/>
+        <Button Content="Students" Canvas.Left="65" Canvas.Top="257" Height="55" Width="108" HorizontalAlignment="Center" VerticalAlignment="Top" Click="ShowStudentsPage"/>
+        <Button Content="Courses" Canvas.Left="65" Canvas.Top="70" Height="55" Width="108" HorizontalAlignment="Center" VerticalAlignment="Top" Click="ShowCoursesPage"/>
+        <Button Content="Professors" Canvas.Left="65" Canvas.Top="163" Height="55" Width="108" HorizontalAlignment="Center" VerticalAlignment="Top" Click="ShowProfessorsPage"/>
+        <Button Content="Personnel" Canvas.Left="65" Canvas.Top="356" Height="55" Width="108" HorizontalAlignment="Center" VerticalAlignment="Top" Click="ShowPersonnelPage" IsEnabled="False"/>
         <TextBlock Canvas.Left="360" TextWrapping="Wrap" Text="Student Management App" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="24"/>
     </Canvas>
 </Window>

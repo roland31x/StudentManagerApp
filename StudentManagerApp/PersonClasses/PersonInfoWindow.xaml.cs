@@ -21,8 +21,8 @@ namespace StudentManagerApp
     public partial class PersonInfoWindow : Window
     {
         public Person CurrentPerson { get; set; }
-        public bool[] DoBOK = new bool[] { false, false, false };
         public bool isEditing = false;
+        DatePicker dobPick;
         public PersonInfoWindow(Person person)
         {
             InitializeComponent();
@@ -35,7 +35,7 @@ namespace StudentManagerApp
             }
             else if(CurrentPerson is Professor)
             {
-                //DrawProfessorInfo();
+                DrawProfessorInfo();
             }
         }
 
@@ -43,7 +43,26 @@ namespace StudentManagerApp
         {
             CurrentPerson.Validate();
         }
+        public void DrawProfessorInfo()
+        {
+            Professor CurrentPerson = (Professor)this.CurrentPerson;
+            Label courselb = new Label()
+            {
+                Content = "Courses:",
+                Margin = new Thickness(0, 0, 10, 0),
+            };
+            StackPanel CoursesPanel = new StackPanel() { Orientation = Orientation.Horizontal, Children = { courselb } };
+            InfoPanel.Children.Add(CoursesPanel);
+            ScrollViewer sw = new ScrollViewer() { Height = 75, Width = 360 };
+            StackPanel crspnl = new StackPanel();
+            sw.Content = crspnl;
+            foreach(Course c in CurrentPerson.Courses)
+            {
+                crspnl.Children.Add(new Label() { Content = c.CourseName, Margin = new Thickness(40,0,0,0) });
+            }
+            InfoPanel.Children.Add(sw);
 
+        }
         public void DrawStudentInfo()
         {
             Student CurrentPerson = (Student)this.CurrentPerson;
@@ -100,6 +119,7 @@ namespace StudentManagerApp
 
             IDLabel.Content = CurrentPerson.TrueID;
             FunctionLabel.Content = CurrentPerson.Function;
+            
 
             //FirstName boxes
             Label fn = new Label()
@@ -144,48 +164,19 @@ namespace StudentManagerApp
                 Content = "Date Of Birth:",
                 Margin = new Thickness(0, 0, 10, 0),
             };
-            bool DoBWasSet = false;
-            if(CurrentPerson.DateOfBrith != null)
+            DatePicker datePicker = new DatePicker() { Margin = new Thickness(0, 0, 10, 0) };
+            datePicker.SelectedDateChanged += DatePicker_SelectedDateChanged;
+            dobPick = datePicker;
+            if(CurrentPerson.DateOfBrith == null)
             {
-                DoBWasSet = true;
-            }
-            TextBox DoBYeartb = new TextBox();
-            if(DoBWasSet)
-            {
-                DoBYeartb.Text = CurrentPerson.DateOfBrith!.Value.Year.ToString();
+                datePicker.SelectedDate = null;
             }
             else
             {
-                DoBYeartb.Text = "YYYY";
-            }
-            DoBYeartb.TextChanged += DoBYeartb_TextChanged;
+                datePicker.SelectedDate = CurrentPerson.DateOfBrith;
+            }         
 
-            TextBox DoBMonthtb = new TextBox();
-            if (DoBWasSet)
-            {
-                DoBMonthtb.Text = CurrentPerson.DateOfBrith!.Value.Month.ToString();
-            }
-            else
-            {
-                DoBMonthtb.Text = "MM";
-            }
-            DoBMonthtb.TextChanged += DoBMonthtb_TextChanged;
-
-            TextBox DoBDaytb = new TextBox();
-            if (DoBWasSet)
-            {
-                DoBDaytb.Text = CurrentPerson.DateOfBrith!.Value.Day.ToString();
-            }
-            else
-            {
-                DoBDaytb.Text = "DD";
-            }
-            DoBDaytb.TextChanged += DoBDaytb_TextChanged;
-
-            Button SaveDoB = new Button() { Content = "Save", Visibility = Visibility.Collapsed, Margin = new Thickness(30,0,0,0) };
-            SaveDoB.Click += SaveDoB_Click;          
-
-            StackPanel DoBPanel = new StackPanel() { Orientation = Orientation.Horizontal, Children = { DoB, DoBYeartb, new Label() { Content = @"//", }, DoBMonthtb, new Label() { Content = @"//", }, DoBDaytb, SaveDoB } };
+            StackPanel DoBPanel = new StackPanel() { Orientation = Orientation.Horizontal, Children = { DoB, datePicker} };
 
             InfoPanel.Children.Add(DoBPanel);
 
@@ -236,6 +227,8 @@ namespace StudentManagerApp
             StackPanel PhonePanel = new StackPanel() { Orientation = Orientation.Horizontal, Children = { phonelabel, phonetb } };
 
             InfoPanel.Children.Add(PhonePanel);
+
+            dobPick.IsEnabled = false;
             foreach(StackPanel sp in InfoPanel.Children.OfType<StackPanel>())
             {
                 foreach(TextBox tb in sp.Children.OfType<TextBox>())
@@ -243,6 +236,11 @@ namespace StudentManagerApp
                     tb.IsEnabled = false;
                 }
             }
+        }
+
+        private void DatePicker_SelectedDateChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            CurrentPerson.SetDoB(dobPick.SelectedDate);
         }
 
         private void PhoneValidation(object sender, TextChangedEventArgs e)
@@ -269,87 +267,6 @@ namespace StudentManagerApp
             {
                 CurrentPerson.SetPersonalEmail(null!);
             }
-        }
-
-        private void DoBYeartb_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextBox year = (TextBox)sender;
-            if (int.TryParse(year.Text, out int value))
-            {
-                if (value > 0 && value < DateTime.Now.Year)
-                {
-                    DoBOK[0] = true;
-                    CheckDoB(sender);
-                }
-            }
-            else
-            {
-                DoBOK[0] = false;
-            }
-        }
-
-        private void DoBMonthtb_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextBox month = (TextBox)sender;
-            if (int.TryParse(month.Text, out int value))
-            {
-                if (value > 0 && value <= 12)
-                {
-                    DoBOK[1] = true;
-                    CheckDoB(sender);
-                }
-            }
-            else
-            {
-                DoBOK[1] = false;
-            }
-        }
-
-        private void DoBDaytb_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextBox day = (TextBox)sender;
-            if(int.TryParse(day.Text, out int value))
-            {
-                if(value > 0 && value <= 31)
-                {
-                    DoBOK[2] = true;
-                    CheckDoB(sender);
-                }
-            }
-            else
-            {
-                DoBOK[2] = false;
-            }
-        }
-        void CheckDoB(object sender)
-        {
-            int check = 0;
-            foreach (bool ok in DoBOK)
-            {
-                if (ok)
-                {
-                    check++;
-                }           
-            }
-            if(check == 3)
-            {
-                foreach (Button b in ((StackPanel)(sender as TextBox)!.Parent).Children.OfType<Button>())
-                {
-                    b.Visibility = Visibility.Visible;
-                }
-            }          
-        }
-        private void SaveDoB_Click(object sender, RoutedEventArgs e)
-        {
-            string[] date = new string[3];
-            int i = 0;
-            foreach (TextBox tb in ((StackPanel)(sender as Button)!.Parent).Children.OfType<TextBox>())
-            {
-                date[i] = tb.Text;
-                i++;
-            }
-            CurrentPerson.SetDoB(new DateTime(year: int.Parse(date[0]), month: int.Parse(date[1]), day: int.Parse(date[2])));
-            (sender as Button)!.Visibility = Visibility.Collapsed;
         }
 
         private void LastNameValidation(object sender, TextChangedEventArgs e)
@@ -388,6 +305,7 @@ namespace StudentManagerApp
             if (isEditing)
             {
                 isEditing = false;
+                dobPick.IsEnabled = false;
                 (sender as Button)!.Content = "Edit";
                 foreach (StackPanel sp in InfoPanel.Children)
                 {
@@ -400,6 +318,7 @@ namespace StudentManagerApp
             else
             {
                 isEditing = true;
+                dobPick.IsEnabled = true;
                 (sender as Button)!.Content = "Stop Editing";
                 foreach (StackPanel sp in InfoPanel.Children)
                 {

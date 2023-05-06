@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,17 +32,14 @@ namespace StudentManagerApp
         }
         void LoadUp()
         {
-            for(int i = 0; i < 100; i++)
+            if (Directory.Exists("Database"))
             {
-                Student st = new Student($"{i} Student", i);
+                MySerializer.LoadUp();
             }
-            for (int i = 100; i < 110; i++)
+            else
             {
-                Professor st = new Professor($"{i} Prof", i);
-            }
-            for (int i = 0; i < 10; i++)
-            {
-                Course cs = new Course($"Course{i}", i);
+                Directory.CreateDirectory("Database");
+                MySerializer.Initialize();
             }
         }
         private void MainFrame_Navigated(object sender, NavigationEventArgs e)

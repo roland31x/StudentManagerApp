@@ -18,13 +18,9 @@ namespace StudentManagerApp.PersonClasses
 
         public List<Course> LeadingCourses = new List<Course>();
         public Professor(string name, int id) : base(id, name)
-        {
-            
+        {           
             Function = "Professor";
-
-            Validate();
-
-           
+            Validate();         
         }
        
         private void ProfPanel_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -45,10 +41,10 @@ namespace StudentManagerApp.PersonClasses
         protected override bool InitialValidate()
         {
             bool isinitialvalid = true;
-            //if (Courses.Count == 0)
-            //{
-            //    isinitialvalid = false;
-            //}
+            if (Courses.Count == 0)
+            {
+                isinitialvalid = false;
+            }
 
             initialValid = isinitialvalid;
             OnPropertyChanged("ValidColor");
@@ -123,6 +119,15 @@ namespace StudentManagerApp.PersonClasses
             list.Children.Add(ProfPanel);
             return ProfPanel;
         }
-
+        public void Enlist(Course course)
+        {
+            Courses.Add(course);
+            Validate();
+        }
+        public void Delist(Course course)
+        {
+            Courses.Remove(course);
+            Validate();         
+        }
     }
 }

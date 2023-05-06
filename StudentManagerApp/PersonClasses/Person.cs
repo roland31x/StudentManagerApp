@@ -82,7 +82,7 @@ namespace StudentManagerApp.PersonClasses
         {
             Phone = phone;
         }
-        public void SetDoB(DateTime date)
+        public void SetDoB(DateTime? date)
         {
             DateOfBrith = date;
         }

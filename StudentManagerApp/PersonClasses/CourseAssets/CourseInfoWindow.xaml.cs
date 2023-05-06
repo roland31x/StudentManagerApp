@@ -67,6 +67,25 @@ namespace StudentManagerApp
 
             return created;
         }
+        StackPanel AddProfPanel(Professor pf)
+        {
+            Label stname = new Label() { Width = 280, Style = (Style)App.Current.Resources["LabelStyle"], HorizontalContentAlignment = HorizontalAlignment.Center };
+
+            Person.BindToControlElement(stname, ContentControl.ContentProperty, pf, "Name");
+            Label email = new Label() { Width = 490, Style = (Style)App.Current.Resources["LabelStyle"], HorizontalContentAlignment = HorizontalAlignment.Center };
+
+            Person.BindToControlElement(email, ContentControl.ContentProperty, pf, "Email");
+
+
+            StackPanel created = new StackPanel()
+            {
+                Orientation = Orientation.Horizontal,
+                Children = { stname, email },
+                Tag = pf,
+            };
+
+            return created;
+        }
         private void NameValidation(object sender, TextChangedEventArgs e)
         {
             TextBox current = (TextBox)sender;
@@ -125,7 +144,13 @@ namespace StudentManagerApp
             PFInfoPanel.Children.Clear();
             foreach (Professor pf in CurrentCourse.Professors)
             {
-                pf.MinimalListThis(PFInfoPanel);
+                PFInfoPanel.Children.Add(AddProfPanel(pf));
+            }
+            foreach (StackPanel st in PFInfoPanel.Children)
+            {
+                st.MouseDown += St_MouseDownProf;
+                st.MouseEnter += St_MouseEnter;
+                st.MouseLeave += St_MouseLeave;
             }
         }
 
@@ -138,7 +163,7 @@ namespace StudentManagerApp
             }
             foreach(StackPanel st in STInfoPanel.Children)
             {
-                st.MouseDown += St_MouseDown;
+                st.MouseDown += St_MouseDownStudent;
                 st.MouseEnter += St_MouseEnter;
                 st.MouseLeave += St_MouseLeave;
             }
@@ -156,8 +181,7 @@ namespace StudentManagerApp
             StackPanel hovered = (StackPanel)sender;
             hovered.Background = Brushes.Aquamarine;
         }
-
-        private void St_MouseDown(object sender, MouseButtonEventArgs e)
+        private void St_MouseDownProf(object sender, MouseButtonEventArgs e)
         {
             Point clicked = e.GetPosition(this);
             StackPanel sp = new StackPanel();
@@ -175,6 +199,66 @@ namespace StudentManagerApp
             };
 
 
+            Label viewBlock = new Label()
+            {
+                Height = 30,
+                Width = 100,
+                Content = "View Profile",
+                Background = Brushes.White,
+                BorderBrush = Brushes.Black,
+                BorderThickness = new Thickness(2, 2, 2, 0),
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                Tag = sender,
+            };
+            viewBlock.MouseDown += ViewBlock_MouseDown;
+            delBlock.MouseDown += DelBlock_MouseDown;
+
+
+            sp.Children.Add(viewBlock);
+            sp.Children.Add(delBlock);
+            Canvas.SetZIndex(sp, 1);
+            Canvas.SetTop(sp, clicked.Y);
+            Canvas.SetLeft(sp, clicked.X);
+            sp.MouseLeave += InfoBlock_MouseLeave;
+            MainCanvas.Children.Add(sp);
+        }
+
+        private void ViewBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            StackPanel clicked = ((sender as Label).Tag) as StackPanel;
+            new PersonInfoWindow(clicked.Tag as Person).ShowDialog();
+        }
+
+        private void St_MouseDownStudent(object sender, MouseButtonEventArgs e)
+        {
+            Point clicked = e.GetPosition(this);
+            StackPanel sp = new StackPanel();
+            Label delBlock = new Label()
+            {
+                Height = 30,
+                Width = 100,
+                Content = "Remove",
+                Background = Brushes.Red,
+                BorderBrush = Brushes.Black,
+                BorderThickness = new Thickness(2, 2, 2, 2),
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                Tag = sender,
+
+            };
+
+            Label viewBlock = new Label()
+            {
+                Height = 30,
+                Width = 100,
+                Content = "View Profile",
+                Background = Brushes.White,
+                BorderBrush = Brushes.Black,
+                BorderThickness = new Thickness(2, 2, 2, 0),
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                Tag = sender,
+            };
+            viewBlock.MouseDown += ViewBlock_MouseDown;
+
             Label grBlock = new Label()
             {
                 Height = 30,
@@ -191,6 +275,7 @@ namespace StudentManagerApp
 
 
             sp.Children.Add(grBlock);
+            sp.Children.Add(viewBlock);
             sp.Children.Add(delBlock);
             Canvas.SetZIndex(sp, 1);
             Canvas.SetTop(sp, clicked.Y);
@@ -208,11 +293,23 @@ namespace StudentManagerApp
         private void DelBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
             StackPanel clicked = ((sender as Label).Tag) as StackPanel;
-            if (MessageBox.Show("You sure you want to remove this student from the course?", "Unlist?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if(clicked.Tag is Student)
             {
-                STInfoPanel.Children.Remove(clicked);
-                CurrentCourse.RemoveStudent(clicked.Tag as Student);
+                if (MessageBox.Show("You sure you want to remove this student from the course?", "Unlist?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    STInfoPanel.Children.Remove(clicked);
+                    CurrentCourse.RemoveStudent(clicked.Tag as Student);
+                }
             }
+            else if(clicked.Tag is Professor)
+            {
+                if (MessageBox.Show("You sure you want to remove this professor from the course?", "Unlist?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    PFInfoPanel.Children.Remove(clicked);
+                    CurrentCourse.UnassignProf(clicked.Tag as Professor);
+                }
+            }
+            
 
         }
         private void InfoBlock_MouseLeave(object sender, MouseEventArgs e)
