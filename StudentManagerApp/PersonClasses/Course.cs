@@ -25,7 +25,7 @@ namespace StudentManagerApp.PersonClasses
     }
     public class Course : ICourse, INotifyPropertyChanged
     {
-        protected static Dictionary<int, Course> Courses = new Dictionary<int, Course>();
+        public static Dictionary<int, Course> Courses = new Dictionary<int, Course>();
         string _Name;
         public string CourseName { get { return _Name; } set { _Name = value; OnPropertyChanged(); } }
         public int ID { get; private set; }
@@ -71,7 +71,7 @@ namespace StudentManagerApp.PersonClasses
                 UnassignProf(Professors.First());
             }
             Courses.Remove(ID);
-
+            MySerializer.Destroy(this);
         }
         public void Validate()
         {

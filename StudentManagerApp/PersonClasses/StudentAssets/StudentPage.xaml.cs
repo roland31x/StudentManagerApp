@@ -192,25 +192,32 @@ namespace StudentManagerApp
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             int nextID = 0;
-            for (int i = 1; i < Person.FullPersonList.Keys.Max(); i++)
+            if (Person.FullPersonList.Any())
             {
-                bool found = true; ;
-                foreach (int key in Person.FullPersonList.Keys)
+                for (int i = 1; i < Person.FullPersonList.Keys.Max(); i++)
                 {
-                    if (i == key)
+                    bool found = true; ;
+                    foreach (int key in Person.FullPersonList.Keys)
                     {
-                        found = false;
+                        if (i == key)
+                        {
+                            found = false;
+                        }
+                    }
+                    if (found)
+                    {
+                        nextID = i;
+                        break;
                     }
                 }
-                if (found)
-                {
-                    nextID = i;
-                    break;
-                }
-            }
-            if (nextID == 0)
+            }            
+            if (nextID == 0 && Person.FullPersonList.Any())
             {
                 nextID = Person.FullPersonList.Keys.Max() + 1;
+            }
+            else
+            {
+                nextID = 1;
             }
             Student ToAdd = new Student("Edit-This And-This", nextID);
             PersonInfoWindow pif = new PersonInfoWindow(ToAdd);

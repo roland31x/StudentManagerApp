@@ -307,7 +307,7 @@ namespace StudentManagerApp
                 isEditing = false;
                 dobPick.IsEnabled = false;
                 (sender as Button)!.Content = "Edit";
-                foreach (StackPanel sp in InfoPanel.Children)
+                foreach (StackPanel sp in InfoPanel.Children.OfType<StackPanel>())
                 {
                     foreach (TextBox tb in sp.Children.OfType<TextBox>())
                     {
@@ -320,7 +320,7 @@ namespace StudentManagerApp
                 isEditing = true;
                 dobPick.IsEnabled = true;
                 (sender as Button)!.Content = "Stop Editing";
-                foreach (StackPanel sp in InfoPanel.Children)
+                foreach (StackPanel sp in InfoPanel.Children.OfType<StackPanel>())
                 {
                     foreach (TextBox tb in sp.Children.OfType<TextBox>())
                     {

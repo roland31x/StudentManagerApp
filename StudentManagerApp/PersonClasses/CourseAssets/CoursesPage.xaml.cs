@@ -88,6 +88,7 @@ namespace StudentManagerApp
                 Course cs = ((sender as Label)!.Tag as Course)!;
                 cs.Destroy();
                 MainList.Children.Remove(GetPanel(cs));
+                CoursePanels.Remove(GetPanel(cs));
             }
 
         }
@@ -118,12 +119,70 @@ namespace StudentManagerApp
         }
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            MainList.Children.Clear();
+            TextBox context = sender as TextBox;
+            if (context.Text == string.Empty)
+            {
+                foreach(StackPanel st in CoursePanels)
+                {
+                    MainList.Children.Add(st);
+                }
+            }
+            else
+            {
+                string filter = ((TextBox)sender).Text;
+                List<StackPanel> Filtered = CoursePanels.Where(x => (x.Tag as Course).CourseName.Contains(filter)).ToList();
+                MainList.Children.Clear();
+                foreach (StackPanel st in Filtered)
+                {
+                    MainList.Children.Add(st);
+                }
+            }
+            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            int nextID = 0;
+            if (Course.Courses.Any())
+            {
+                for (int i = 1; i < Course.Courses.Keys.Max(); i++)
+                {
+                    bool found = true; ;
+                    foreach (int key in Course.Courses.Keys)
+                    {
+                        if (i == key)
+                        {
+                            found = false;
+                        }
+                    }
+                    if (found)
+                    {
+                        nextID = i;
+                        break;
+                    }
+                }
+            }
+            if (nextID == 0 && Course.Courses.Any())
+            {
+                nextID = Course.Courses.Keys.Max() + 1;
+            }
+            else
+            {
+                nextID = 1;
+            }
+            Course ToAdd = new Course("Edit-This And-This", nextID);
+            CourseInfoWindow pif = new CourseInfoWindow(ToAdd);
+            pif.ShowDialog();
+            if (MessageBox.Show($"Course {ToAdd.CourseName} created, press OK to save it.", "Save?", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                StackPanel added = ToAdd.ListCourse(MainList);
+                CoursePanels.Add(added);
+            }
+            else
+            {
+                ToAdd.Destroy();
+            }
         }
     }
 }

@@ -130,6 +130,7 @@ namespace StudentManagerApp.PersonClasses
         public virtual void Destroy()
         {
             FullPersonList.Remove(this.Id);
+            MySerializer.Destroy(this);
         }
         public abstract StackPanel MinimalListThis(StackPanel list);
         public abstract void Validate();

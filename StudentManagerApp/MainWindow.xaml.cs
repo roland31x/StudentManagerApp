@@ -29,7 +29,22 @@ namespace StudentManagerApp
             InitializeComponent();
             LoadUp();
             MainFrame.Navigated += MainFrame_Navigated;
+            Closed += MainWindow_Closed;
+            //Course p = new Course("TestCourse", 1);
         }
+
+        private void MainWindow_Closed(object? sender, EventArgs e)
+        {
+            foreach(Person p in Person.FullPersonList.Values)
+            {
+                MySerializer.Serialize(p);
+            }
+            foreach(Course c in Course.Courses.Values)
+            {
+                MySerializer.Serialize(c);
+            }
+        }
+
         void LoadUp()
         {
             if (Directory.Exists("Database"))

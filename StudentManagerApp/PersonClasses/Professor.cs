@@ -16,7 +16,6 @@ namespace StudentManagerApp.PersonClasses
 
         public List<Course> Courses = new List<Course>();
 
-        public List<Course> LeadingCourses = new List<Course>();
         public Professor(string name, int id) : base(id, name)
         {           
             Function = "Professor";
