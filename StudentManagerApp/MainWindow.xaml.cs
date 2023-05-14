@@ -30,7 +30,6 @@ namespace StudentManagerApp
             LoadUp();
             MainFrame.Navigated += MainFrame_Navigated;
             Closed += MainWindow_Closed;
-            //Course p = new Course("TestCourse", 1);
         }
 
         private void MainWindow_Closed(object? sender, EventArgs e)
